@@ -3,6 +3,7 @@ CREATE TABLE `products` (
 	`name` varchar(255),
 	`image` varchar(2048),
 	`price` decimal(10,2),
+	`description` text,
 	`created_at` datetime,
 	`updated_at` datetime,
 	CONSTRAINT `products_id` PRIMARY KEY(`id`)

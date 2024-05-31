@@ -1,5 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import aws from 'aws-sdk';
+import crypto from 'crypto';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 
@@ -23,6 +24,7 @@ const s3Client = new S3Client({
   },
 });
 
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 // Set up multer-s3 to upload images to S3
 const upload = multer({
   storage: multerS3({
@@ -32,7 +34,9 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, Date.now().toString() + '-' + file.originalname);
+      const fileName = generateFileName();
+      const extension = file.originalname.split('.').pop();
+      cb(null, `${fileName}.${extension}`);
     },
   }),
 });

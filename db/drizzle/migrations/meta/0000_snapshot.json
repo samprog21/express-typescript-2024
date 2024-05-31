@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "66f2f2aa-d5c9-4f1a-8674-6b83244c0043",
+  "id": "d88f66c9-b8aa-4365-b891-95ace720a527",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "products": {
@@ -31,6 +31,13 @@
         "price": {
           "name": "price",
           "type": "decimal(10,2)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
