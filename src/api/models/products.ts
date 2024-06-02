@@ -6,6 +6,7 @@ export const products = mysqlTable('products', {
   image: varchar('image', { length: 2048 }),
   price: decimal('price', { precision: 10, scale: 2 }),
   description: text('description'),
+  quantity: bigint('quantity', { mode: 'number' }).default(1),
   created_at: datetime('created_at'),
   updated_at: datetime('updated_at'),
 });

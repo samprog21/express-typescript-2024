@@ -7,7 +7,7 @@ import { products } from '../models/products';
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    const { name, price, description } = req.body;
+    const { name, price, description, quantity } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ error: 'Image file is required' });
@@ -23,6 +23,7 @@ export const addProduct = async (req: Request, res: Response) => {
         image: imageName,
         price: price,
         description: description,
+        quantity: quantity,
         created_at: new Date(),
         updated_at: new Date(),
       })
@@ -37,15 +38,16 @@ export const addProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, price, description } = req.body;
+    const { name, price, description, quantity } = req.body;
     const imageName = (req.file as Express.Multer.File & { key: string })?.key;
 
     console.log('imageUrl', imageName);
 
-    const updates: { name: any; price: any; description: any; updated_at: Date; image?: string } = {
+    const updates: { name: any; price: any; description: any; updated_at: Date; image?: string; quantity: number } = {
       name: name,
       price: price,
       description: description,
+      quantity: Number(quantity),
       updated_at: new Date(),
     };
 

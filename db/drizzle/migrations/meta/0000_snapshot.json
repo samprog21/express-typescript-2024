@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d88f66c9-b8aa-4365-b891-95ace720a527",
+  "id": "154c0d65-052f-457b-a6f8-5423476fee17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "products": {
@@ -41,6 +41,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 1
         },
         "created_at": {
           "name": "created_at",

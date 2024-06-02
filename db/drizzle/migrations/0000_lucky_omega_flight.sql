@@ -4,6 +4,7 @@ CREATE TABLE `products` (
 	`image` varchar(2048),
 	`price` decimal(10,2),
 	`description` text,
+	`quantity` bigint DEFAULT 1,
 	`created_at` datetime,
 	`updated_at` datetime,
 	CONSTRAINT `products_id` PRIMARY KEY(`id`)
