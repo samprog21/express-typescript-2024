@@ -95,7 +95,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 // }
 export const listProducts = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 10, name, startDate, endDate } = req.query;
+    const { page = 1, limit = 10, name, dateRangeFrom: startDate, dateRangeTo: endDate, price } = req.query;
 
     const offset = ((page as number) - 1) * (limit as number);
 
@@ -103,6 +103,10 @@ export const listProducts = async (req: Request, res: Response) => {
 
     if (name) {
       query.where(like(products.name, `%${name}%`));
+    }
+
+    if (price) {
+      query.where(like(products.price, `%${price}%`));
     }
 
     if (startDate && endDate) {
@@ -123,8 +127,13 @@ export const listProducts = async (req: Request, res: Response) => {
         return { ...product, image: imageUrl };
       })
     );
-
     res.json(productsWithImageUrl);
+
+    // res.status(200).json({
+    //   productsWithImageUrl,
+    //   status: 200,
+    //   message: 'Products list sent successfully',
+    // });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

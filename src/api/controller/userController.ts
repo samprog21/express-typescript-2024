@@ -8,7 +8,7 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     console.log(req.body);
     const { id } = req.params;
-    const numericId = parseInt(id, 10); // Convert id to a number
+    const numericId = parseInt(id, 10);
     if (isNaN(numericId)) {
       return res.status(400).json({ error: 'Invalid user ID' });
     }
