@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import upload from '../../common/middleware/imageUploader';
-import { addProduct, listProducts, updateProduct } from '../controller/productsController';
+import { addProduct, getProduct, listProducts, updateProduct } from '../controller/productsController';
 
 const productsRouter = Router();
 
@@ -12,10 +12,10 @@ productsRouter.post('/', upload.single('image'), addProduct);
 productsRouter.get('/', listProducts);
 
 // Retrieve a single user by id
-productsRouter.get('/:id', listProducts);
+productsRouter.get('/:id', getProduct);
 
 // Update a user by id
-productsRouter.put('/:id', upload.single('image'), updateProduct);
+productsRouter.patch('/:id', upload.single('image'), updateProduct);
 
 // Delete a user by id
 //router.delete('/users/:id', UserController.deleteUser);

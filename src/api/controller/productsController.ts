@@ -5,8 +5,6 @@ import { getObjectSignedUrl } from '../../common/utils/s3';
 import { db } from '../../index';
 import { products } from '../models/products';
 
-//const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
-
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, price, description } = req.body;
@@ -16,6 +14,7 @@ export const addProduct = async (req: Request, res: Response) => {
     }
 
     const imageName = (req.file as Express.Multer.File & { key: string }).key;
+    console.log('imageName', imageName);
 
     const newProduct = await db
       .insert(products)
@@ -39,17 +38,24 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, price, description } = req.body;
-    const imageUrl = (req.file as any)?.location;
+    const imageName = (req.file as Express.Multer.File & { key: string })?.key;
+
+    console.log('imageUrl', imageName);
+
+    const updates: { name: any; price: any; description: any; updated_at: Date; image?: string } = {
+      name: name,
+      price: price,
+      description: description,
+      updated_at: new Date(),
+    };
+
+    if (imageName) {
+      updates.image = imageName;
+    }
 
     const updatedProduct = await db
       .update(products)
-      .set({
-        name: name,
-        image: imageUrl,
-        price: price,
-        description: description,
-        updated_at: new Date(),
-      })
+      .set(updates)
       .where(eq(products.id, Number(id)))
       .execute();
 
@@ -88,6 +94,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 export const listProducts = async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 10, name, startDate, endDate } = req.query;
+
     const offset = ((page as number) - 1) * (limit as number);
 
     const query = db.select().from(products);
@@ -116,6 +123,29 @@ export const listProducts = async (req: Request, res: Response) => {
     );
 
     res.json(productsWithImageUrl);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const query = db
+      .select()
+      .from(products)
+      .where(eq(products.id, Number(id)));
+
+    const product = await query.execute();
+    const productWithImageUrl = await Promise.all(
+      product.map(async (product) => {
+        const imageUrl = product.image ? await getObjectSignedUrl(product.image) : null;
+        return { ...product, image: imageUrl };
+      })
+    );
+
+    res.json(productWithImageUrl);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
